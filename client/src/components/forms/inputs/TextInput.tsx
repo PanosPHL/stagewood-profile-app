@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import { SignUpActionTypes } from '../SignUpForm';
+import { LoginActionTypes } from '../LoginForm';
 
 export enum TextInputType {
   Username = 'username',
@@ -14,9 +15,9 @@ interface TextInputProps {
   state: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: SignUpActionTypes
+    type: SignUpActionTypes | LoginActionTypes
   ) => void;
-  actionType: SignUpActionTypes;
+  actionType: SignUpActionTypes | LoginActionTypes;
   type: TextInputType;
 }
 
@@ -47,6 +48,8 @@ const TextInput: React.FC<TextInputProps> = ({
       type={inputType}
       label={getLabel(type)}
       variant="outlined"
+      fullWidth={true}
+      size="small"
     />
   );
 };

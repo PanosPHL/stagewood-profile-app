@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { TextInput, FileInput } from './inputs';
 import { TextInputType } from './inputs/types';
+import { Action } from './types';
+import { LoginActionTypes } from './LoginForm';
 
 type LoginFormState = {
   username: string;
@@ -21,20 +23,20 @@ const initialState: LoginFormState = {
 };
 
 export enum SignUpActionTypes {
-  SET_USERNAME = 'LoginForm/SET_USERNAME',
-  SET_EMAIL = 'LoginForm/SET_EMAIL',
-  SET_NAME = 'LoginForm/SET_NAME',
-  SET_PASSWORD = 'LoginForm/SET_PASSWORD',
-  SET_PROFILE_PICTURE = 'LoginForm/SET_PROFILE_PICTURE',
+  SET_USERNAME = 'SignUpForm/SET_USERNAME',
+  SET_EMAIL = 'SignUpForm/SET_EMAIL',
+  SET_NAME = 'SignUpForm/SET_NAME',
+  SET_PASSWORD = 'SignUpForm/SET_PASSWORD',
+  SET_PROFILE_PICTURE = 'SignUpForm/SET_PROFILE_PICTURE',
 }
 
-type Action = {
+export type SignUpAction = {
   type: SignUpActionTypes;
   payload: string;
   file?: File;
 };
 
-function loginReducer(state: LoginFormState, action: Action) {
+function signupReducer(state: LoginFormState, action: Action) {
   const newState = Object.assign({}, state);
   switch (action.type) {
     case SignUpActionTypes.SET_USERNAME:
@@ -61,19 +63,27 @@ const useStyles = makeStyles((theme) => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: '320px',
+  },
+  button: {
+    width: '100%',
+    height: '32px',
   },
 }));
 
-export const LoginForm: React.FC<unknown> = () => {
+export const SignUpForm: React.FC<unknown> = () => {
   const [
     { username, email, name, password, profilePicture },
     dispatch,
-  ] = useReducer(loginReducer, initialState);
+  ] = useReducer(signupReducer, initialState);
 
   const onTextChange = useCallback(
     (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      type: SignUpActionTypes
+      type: SignUpActionTypes | LoginActionTypes
     ) => {
       dispatch({
         type: type,
@@ -84,7 +94,10 @@ export const LoginForm: React.FC<unknown> = () => {
   );
 
   const onFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, type: SignUpActionTypes) => {
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      type: SignUpActionTypes | LoginActionTypes
+    ) => {
       const file = e.currentTarget.files ? e.currentTarget.files[0] : undefined;
       console.log('hit');
       console.log(file);
@@ -97,7 +110,7 @@ export const LoginForm: React.FC<unknown> = () => {
     e.preventDefault();
   };
 
-  const { form } = useStyles();
+  const { form, button } = useStyles();
 
   return (
     <form onSubmit={onSubmit} className={form}>
@@ -130,9 +143,17 @@ export const LoginForm: React.FC<unknown> = () => {
         onChange={onFileChange}
         actionType={SignUpActionTypes.SET_PROFILE_PICTURE}
       />
-      <Button type="submit">Sign Up</Button>
+      <Button
+        className={button}
+        type="submit"
+        variant="contained"
+        color="secondary"
+        size="small"
+      >
+        Sign Up
+      </Button>
     </form>
   );
 };
 
-export default LoginForm;
+export default SignUpForm;

@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { SignUpActionTypes } from '../SignUpForm';
 
 interface FileInputProps {
@@ -12,14 +14,27 @@ interface FileInputProps {
   actionType: SignUpActionTypes;
 }
 
+const useStyles = makeStyles(() => ({
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    color: '#555555',
+  },
+  fileText: {
+    marginLeft: '14px',
+  },
+}));
+
 const FileInput: React.FC<FileInputProps> = ({
   file,
   onChange,
   actionType,
 }) => {
   const fileInput = useRef<HTMLInputElement | null>(null);
+  const { inputContainer, fileText } = useStyles();
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div className={inputContainer}>
       <input
         type="file"
         accept="image/*"
@@ -30,15 +45,17 @@ const FileInput: React.FC<FileInputProps> = ({
         }}
       />
       <Button
+        variant="contained"
         onClick={() => {
           if (fileInput.current) {
             fileInput.current.click();
           }
         }}
+        startIcon={<CloudUploadIcon />}
       >
-        Click Me
+        <Typography variant="body2">Upload Profile Picture</Typography>
       </Button>
-      <Typography variant="body2">
+      <Typography className={fileText} variant="body1" noWrap={true}>
         {file ? file.name : 'No file selected'}
       </Typography>
     </div>
