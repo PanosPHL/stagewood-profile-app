@@ -14,12 +14,14 @@ interface FileInputProps {
   actionType: SignUpActionTypes;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   inputContainer: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     color: '#555555',
+    margin: theme.spacing(0, 'auto'),
   },
   fileText: {
     marginLeft: '14px',

@@ -135,7 +135,7 @@ const Auth: React.FC<AuthProps> = ({ pageType }) => {
             ) : (
               <>
                 <LoginForm />
-                <div>
+                <div className={`${flexColumn} ${cardFooter}`}>
                   <Typography className={subheaderText} variant="body2">
                     Need an account?
                   </Typography>

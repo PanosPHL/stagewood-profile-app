@@ -19,6 +19,12 @@ interface TextInputProps {
   ) => void;
   actionType: SignUpActionTypes | LoginActionTypes;
   type: TextInputType;
+  size: SizeType | undefined;
+}
+
+export enum SizeType {
+  Small = 'small',
+  Medium = 'medium',
 }
 
 const getLabel = (type: string) => {
@@ -30,6 +36,7 @@ const TextInput: React.FC<TextInputProps> = ({
   onChange,
   type,
   actionType,
+  size,
 }) => {
   let inputType: string = '';
 
@@ -49,7 +56,7 @@ const TextInput: React.FC<TextInputProps> = ({
       label={getLabel(type)}
       variant="outlined"
       fullWidth={true}
-      size="small"
+      size={size}
     />
   );
 };

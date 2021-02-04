@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     width: '100%',
-    margin: theme.spacing(2, 0),
+    margin: theme.spacing(2.5, 0),
   },
   or: {
     position: 'absolute',

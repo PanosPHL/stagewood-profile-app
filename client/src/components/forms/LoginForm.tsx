@@ -10,6 +10,7 @@ import { TextInput } from './inputs';
 import { TextInputType } from './inputs/types';
 import { SignUpActionTypes } from './SignUpForm';
 import { Action } from './types';
+import { SizeType } from './inputs/TextInput';
 
 type LoginFormState = {
   usernameOrEmail: string;
@@ -45,11 +46,12 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    justifyContent: 'space-between',
-    height: '300px',
+    justifyContent: 'space-evenly',
+    height: '320px',
   },
   button: {
     backgroundColor: '#EA2026',
+    height: '48px',
   },
 });
 
@@ -85,19 +87,20 @@ const LoginForm: React.FC<unknown> = () => {
         onChange={onTextChange}
         actionType={LoginActionTypes.SET_USERNAME_OR_EMAIL}
         type={TextInputType.Username}
+        size={SizeType.Medium}
       />
       <TextInput
         state={password}
         onChange={onTextChange}
         actionType={LoginActionTypes.SET_PASSWORD}
         type={TextInputType.Password}
+        size={SizeType.Medium}
       />
       <Button
         className={button}
         type="submit"
         variant="contained"
         color="secondary"
-        size="small"
       >
         Sign In
       </Button>

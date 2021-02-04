@@ -5,6 +5,7 @@ import { TextInput, FileInput } from './inputs';
 import { TextInputType } from './inputs/types';
 import { Action } from './types';
 import { LoginActionTypes } from './LoginForm';
+import { SizeType } from './inputs/TextInput';
 
 type LoginFormState = {
   username: string;
@@ -119,24 +120,28 @@ export const SignUpForm: React.FC<unknown> = () => {
         onChange={onTextChange}
         type={TextInputType.Username}
         actionType={SignUpActionTypes.SET_USERNAME}
+        size={SizeType.Small}
       />
       <TextInput
         state={email}
         onChange={onTextChange}
         type={TextInputType.Email}
         actionType={SignUpActionTypes.SET_EMAIL}
+        size={SizeType.Small}
       />
       <TextInput
         state={name}
         onChange={onTextChange}
         type={TextInputType.Name}
         actionType={SignUpActionTypes.SET_NAME}
+        size={SizeType.Small}
       />
       <TextInput
         state={password}
         onChange={onTextChange}
         type={TextInputType.Password}
         actionType={SignUpActionTypes.SET_PASSWORD}
+        size={SizeType.Small}
       />
       <FileInput
         file={profilePicture}
