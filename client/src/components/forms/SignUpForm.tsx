@@ -1,6 +1,7 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, SyntheticEvent } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { TextInput } from './inputs';
+import Button from '@material-ui/core/Button';
+import { TextInput, FileInput } from './inputs';
 import { TextInputType } from './inputs/types';
 
 type LoginFormState = {
@@ -19,7 +20,7 @@ const initialState: LoginFormState = {
   profilePicture: undefined,
 };
 
-export enum LoginActionTypes {
+export enum SignUpActionTypes {
   SET_USERNAME = 'LoginForm/SET_USERNAME',
   SET_EMAIL = 'LoginForm/SET_EMAIL',
   SET_NAME = 'LoginForm/SET_NAME',
@@ -28,7 +29,7 @@ export enum LoginActionTypes {
 }
 
 type Action = {
-  type: LoginActionTypes;
+  type: SignUpActionTypes;
   payload: string;
   file?: File;
 };
@@ -36,19 +37,19 @@ type Action = {
 function loginReducer(state: LoginFormState, action: Action) {
   const newState = Object.assign({}, state);
   switch (action.type) {
-    case LoginActionTypes.SET_USERNAME:
+    case SignUpActionTypes.SET_USERNAME:
       newState.username = action.payload;
       return newState;
-    case LoginActionTypes.SET_EMAIL:
+    case SignUpActionTypes.SET_EMAIL:
       newState.email = action.payload;
       return newState;
-    case LoginActionTypes.SET_NAME:
+    case SignUpActionTypes.SET_NAME:
       newState.name = action.payload;
       return newState;
-    case LoginActionTypes.SET_PASSWORD:
+    case SignUpActionTypes.SET_PASSWORD:
       newState.password = action.payload;
       return newState;
-    case LoginActionTypes.SET_PROFILE_PICTURE:
+    case SignUpActionTypes.SET_PROFILE_PICTURE:
       newState.profilePicture = action.file;
       return newState;
     default:
@@ -72,45 +73,64 @@ export const LoginForm: React.FC<unknown> = () => {
   const onTextChange = useCallback(
     (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      type: LoginActionTypes
+      type: SignUpActionTypes
     ) => {
-      console.log('hit');
       dispatch({
         type: type,
         payload: e.currentTarget.value,
       });
     },
-    [username, email, name, password]
+    []
   );
+
+  const onFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, type: SignUpActionTypes) => {
+      const file = e.currentTarget.files ? e.currentTarget.files[0] : undefined;
+      console.log('hit');
+      console.log(file);
+      dispatch({ type, file, payload: '' });
+    },
+    []
+  );
+
+  const onSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+  };
 
   const { form } = useStyles();
 
   return (
-    <form className={form}>
+    <form onSubmit={onSubmit} className={form}>
       <TextInput
         state={username}
         onChange={onTextChange}
         type={TextInputType.Username}
-        actionType={LoginActionTypes.SET_USERNAME}
+        actionType={SignUpActionTypes.SET_USERNAME}
       />
       <TextInput
         state={email}
         onChange={onTextChange}
         type={TextInputType.Email}
-        actionType={LoginActionTypes.SET_EMAIL}
+        actionType={SignUpActionTypes.SET_EMAIL}
       />
       <TextInput
         state={name}
         onChange={onTextChange}
         type={TextInputType.Name}
-        actionType={LoginActionTypes.SET_NAME}
+        actionType={SignUpActionTypes.SET_NAME}
       />
       <TextInput
         state={password}
         onChange={onTextChange}
         type={TextInputType.Password}
-        actionType={LoginActionTypes.SET_PASSWORD}
+        actionType={SignUpActionTypes.SET_PASSWORD}
       />
+      <FileInput
+        file={profilePicture}
+        onChange={onFileChange}
+        actionType={SignUpActionTypes.SET_PROFILE_PICTURE}
+      />
+      <Button type="submit">Sign Up</Button>
     </form>
   );
 };

@@ -10,7 +10,7 @@ interface AuthRouteProps {
 
 const AuthRoute = ({ userId, path, component }: AuthRouteProps) => {
   if (!userId) {
-    return <Redirect exact to="/login" />;
+    return <Redirect exact to="/signup" />;
   } else {
     return <Route path={path} component={component} />;
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
-import { LoginActionTypes } from '../LoginForm';
+import { SignUpActionTypes } from '../SignUpForm';
 
 export enum TextInputType {
   Username = 'username',
@@ -14,9 +14,9 @@ interface TextInputProps {
   state: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    type: LoginActionTypes
+    type: SignUpActionTypes
   ) => void;
-  actionType: LoginActionTypes;
+  actionType: SignUpActionTypes;
   type: TextInputType;
 }
 
