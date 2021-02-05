@@ -1,4 +1,5 @@
 import React, { SetStateAction, useState, Dispatch } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -19,10 +20,32 @@ interface ErrorModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   errors: ErrorArray;
+  setErrors: Dispatch<SetStateAction<ErrorArray>>;
 }
 
-const ErrorModal: React.FC<ErrorModalProps> = ({ open, setOpen, errors }) => {
-  const handleClose = () => setOpen(false);
+const useStyles = makeStyles((theme) => ({
+  title: {
+    textAlign: 'center',
+    fontSize: '2.4rem',
+    fontFamily: 'Roboto',
+  },
+  content: {
+    margin: theme.spacing(0, 'auto'),
+  },
+}));
+
+const ErrorModal: React.FC<ErrorModalProps> = ({
+  open,
+  setOpen,
+  errors,
+  setErrors,
+}) => {
+  const handleClose = () => {
+    setOpen(false);
+    setErrors([]);
+  };
+
+  const { title, content } = useStyles();
 
   return (
     <Dialog
@@ -32,26 +55,48 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ open, setOpen, errors }) => {
       onClose={handleClose}
       aria-labelledby="error-modal-slide-title"
       aria-describedby="error-modal-slide-description"
+      fullWidth={true}
     >
-      <DialogTitle id="error-modal-slide-title">Errors</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="error-modal-slide-description">
-          <List>
-            {errors.map((error, i) => {
-              if (error) {
-                const errorKey = Object.keys(error)[0];
-                return (
-                  <ListItem key={`error-${i + 1}`}>
-                    <ListItemText
-                      primaryTypographyProps={{ color: 'error' }}
-                      primary={`${errorKey}: ${error ? error[errorKey] : ''}`}
-                    />
-                  </ListItem>
-                );
-              }
-            })}
-          </List>
-        </DialogContentText>
+      <DialogTitle
+        classes={{
+          root: title,
+        }}
+        id="error-modal-slide-title"
+        disableTypography={true}
+      >
+        Errors
+      </DialogTitle>
+      <DialogContent className={content} id="error-modal-slide-list">
+        <List>
+          {errors.map((error, i) => {
+            if (typeof error === 'string') {
+              return (
+                <ListItem key={`error-${i + 1}`}>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      color: 'error',
+                      variant: errors.length > 1 ? 'body2' : 'h6',
+                    }}
+                    primary={`${error}`}
+                  />
+                </ListItem>
+              );
+            } else if (error) {
+              const errorKey = Object.keys(error)[0];
+              return (
+                <ListItem key={`error-${i + 1}`}>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      color: 'error',
+                      variant: errors.length > 1 ? 'body2' : 'h6',
+                    }}
+                    primary={`${errorKey}: ${error ? error[errorKey] : ''}`}
+                  />
+                </ListItem>
+              );
+            }
+          })}
+        </List>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

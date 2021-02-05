@@ -32,7 +32,12 @@ function App() {
     <ErrorContext.Provider value={value}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <ErrorModal open={open} setOpen={setOpen} errors={errors} />
+          <ErrorModal
+            open={open}
+            setOpen={setOpen}
+            errors={errors}
+            setErrors={setErrors}
+          />
           <Router>
             <Suspense fallback={<LoadingScreen />}>
               <Switch>

@@ -57,7 +57,7 @@ const FileInput: React.FC<FileInputProps> = ({
       >
         <Typography variant="body2">Upload Profile Picture</Typography>
       </Button>
-      <Typography className={fileText} variant="body1" noWrap={true}>
+      <Typography className={fileText} variant="body2" noWrap={true}>
         {file ? file.name : 'No file selected'}
       </Typography>
     </div>

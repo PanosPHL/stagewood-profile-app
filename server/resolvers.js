@@ -4,6 +4,11 @@ const {
   jwtConfig: { secret },
 } = require('./config');
 const uploadProfilePicture = require('./aws');
+const { validateSignUp } = require('./validators');
+const {
+  UserInputError,
+  AuthenticationError,
+} = require('apollo-server-express');
 
 const resolvers = {
   Mutation: {
@@ -13,6 +18,17 @@ const resolvers = {
       ctx,
       info
     ) => {
+      const validationErrors = validateSignUp(username, email, name, password);
+
+      if (validationErrors.length) {
+        throw new UserInputError(
+          'Failed to sign up user due to validation errors',
+          {
+            validationErrors,
+          }
+        );
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const url = uploadProfilePicture(profilePicture);
 
@@ -46,12 +62,14 @@ const resolvers = {
         },
       });
 
-      console.log(user, secret);
+      if (!user) {
+        throw new AuthenticationError('Invalid Login');
+      }
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
-        return;
+        throw new AuthenticationError('Invalid Login');
       }
 
       const token = jwt.sign(

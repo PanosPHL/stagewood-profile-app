@@ -92,7 +92,17 @@ export const SignUpForm: React.FC<unknown> = () => {
   const [
     signUp,
     { data, loading: mutationLoading, error: mutationError },
-  ] = useMutation(SIGN_UP);
+  ] = useMutation(SIGN_UP, {
+    onError: (e) => {
+      if (e.graphQLErrors.length) {
+        const valErrors = e.graphQLErrors[0];
+        if (valErrors.extensions && valErrors.extensions.validationErrors) {
+          setErrors(valErrors.extensions.validationErrors);
+          return;
+        }
+      }
+    },
+  });
   const { setErrors } = useContext(ErrorContext);
 
   const onTextChange = useCallback(
@@ -131,18 +141,21 @@ export const SignUpForm: React.FC<unknown> = () => {
       setErrors([{ Picture: message }]);
       return;
     }
-    const res = signUp({
-      variables: {
-        input: {
-          username,
-          email,
-          name,
-          password,
-          profilePicture: base64,
+    try {
+      const res = signUp({
+        variables: {
+          input: {
+            username,
+            email,
+            name,
+            password,
+            profilePicture: base64,
+          },
         },
-      },
-    });
-    console.log(res);
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const { form, button } = useStyles();

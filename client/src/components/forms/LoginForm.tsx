@@ -3,6 +3,7 @@ import React, {
   useCallback,
   ChangeEvent,
   SyntheticEvent,
+  useContext,
 } from 'react';
 import { useMutation } from '@apollo/client';
 import { makeStyles } from '@material-ui/core';
@@ -13,6 +14,7 @@ import { SignUpActionTypes } from './SignUpForm';
 import { Action } from './types';
 import { SizeType } from './inputs/TextInput';
 import { LOGIN } from '../../apollo/mutations';
+import { ErrorContext } from '../../contexts';
 
 type LoginFormState = {
   usernameOrEmail: string;
@@ -62,7 +64,14 @@ const LoginForm: React.FC<unknown> = () => {
     loginReducer,
     initialState
   );
-  const [login, { data }] = useMutation(LOGIN);
+  const [login, { data }] = useMutation(LOGIN, {
+    onError: (e) => {
+      if (e.graphQLErrors.length) {
+        setErrors(['Invalid Login']);
+      }
+    },
+  });
+  const { setErrors } = useContext(ErrorContext);
 
   const onTextChange = useCallback(
     (

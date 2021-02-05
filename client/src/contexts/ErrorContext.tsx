@@ -1,10 +1,10 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
-type AuthError = {
+type SignUpError = {
   [field: string]: string;
 };
 
-export type ErrorArray = Array<AuthError | undefined>;
+export type ErrorArray = Array<SignUpError | string | undefined>;
 
 export interface ErrorContextState {
   errors: ErrorArray;
