@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const {
   jwtConfig: { secret },
 } = require('./config');
+const uploadProfilePicture = require('./aws');
 
 const resolvers = {
   Mutation: {
@@ -12,8 +13,8 @@ const resolvers = {
       ctx,
       info
     ) => {
-      console.log('hit', password);
       const hashedPassword = await bcrypt.hash(password, 10);
+      const url = uploadProfilePicture(profilePicture);
 
       const user = await ctx.prisma.user.create({
         data: {
@@ -21,7 +22,7 @@ const resolvers = {
           email,
           name,
           password: hashedPassword,
-          profilePicture: '',
+          profilePicture: url,
         },
       });
 
