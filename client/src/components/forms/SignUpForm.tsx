@@ -1,4 +1,5 @@
 import React, { useReducer, useCallback, SyntheticEvent } from 'react';
+import { useMutation } from '@apollo/client';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { TextInput, FileInput } from './inputs';
@@ -6,6 +7,8 @@ import { TextInputType } from './inputs/types';
 import { Action } from './types';
 import { LoginActionTypes } from './LoginForm';
 import { SizeType } from './inputs/TextInput';
+import { SIGN_UP } from '../../apollo/mutations';
+import { toBase64 } from '../../util';
 
 type LoginFormState = {
   username: string;
@@ -80,6 +83,7 @@ export const SignUpForm: React.FC<unknown> = () => {
     { username, email, name, password, profilePicture },
     dispatch,
   ] = useReducer(signupReducer, initialState);
+  const [signUp, { data }] = useMutation(SIGN_UP);
 
   const onTextChange = useCallback(
     (
@@ -107,8 +111,22 @@ export const SignUpForm: React.FC<unknown> = () => {
     []
   );
 
-  const onSubmit = (e: SyntheticEvent) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    const base64 = await toBase64(profilePicture);
+    console.log(base64);
+    const res = signUp({
+      variables: {
+        input: {
+          username,
+          email,
+          name,
+          password,
+          profilePicture: base64,
+        },
+      },
+    });
+    console.log(res);
   };
 
   const { form, button } = useStyles();

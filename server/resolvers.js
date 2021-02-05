@@ -1,15 +1,18 @@
-const result = require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {
+  jwtConfig: { secret },
+} = require('./config');
 
 const resolvers = {
   Mutation: {
     signup: async (
       parent,
-      { username, email, name, password, profilePicture = 'hi' },
+      { input: { username, email, name, password, profilePicture } },
       ctx,
       info
     ) => {
+      console.log('hit', password);
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await ctx.prisma.user.create({
@@ -18,7 +21,7 @@ const resolvers = {
           email,
           name,
           password: hashedPassword,
-          profilePicture,
+          profilePicture: '',
         },
       });
 
@@ -42,7 +45,7 @@ const resolvers = {
         },
       });
 
-      console.log(user, result);
+      console.log(user, secret);
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
@@ -55,7 +58,7 @@ const resolvers = {
           id: user.id,
           username: user.username,
         },
-        result.parsed.JWT_SECRET_KEY
+        secret
       );
 
       return {

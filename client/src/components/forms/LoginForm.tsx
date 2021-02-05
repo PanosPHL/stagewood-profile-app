@@ -4,6 +4,7 @@ import React, {
   ChangeEvent,
   SyntheticEvent,
 } from 'react';
+import { useMutation } from '@apollo/client';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { TextInput } from './inputs';
@@ -11,6 +12,7 @@ import { TextInputType } from './inputs/types';
 import { SignUpActionTypes } from './SignUpForm';
 import { Action } from './types';
 import { SizeType } from './inputs/TextInput';
+import { LOGIN } from '../../apollo/mutations';
 
 type LoginFormState = {
   usernameOrEmail: string;
@@ -60,6 +62,7 @@ const LoginForm: React.FC<unknown> = () => {
     loginReducer,
     initialState
   );
+  const [login, { data }] = useMutation(LOGIN);
 
   const onTextChange = useCallback(
     (
@@ -74,8 +77,16 @@ const LoginForm: React.FC<unknown> = () => {
     []
   );
 
-  const onSubmit = (e: SyntheticEvent) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    const res = await login({
+      variables: {
+        usernameOrEmail,
+        password,
+      },
+    });
+
+    console.log(res);
   };
 
   const { form, button } = useStyles();

@@ -14,19 +14,20 @@ const typeDefs = gql`
     token: String!
   }
 
+  input SignUpInput {
+    username: String! @constraint(minLength: 5, maxLength: 64)
+    email: String! @constraint(minLength: 5, format: "email")
+    name: String! @constraint(minLength: 3, maxLength: 255)
+    password: String! @constraint(minLength: 5)
+    profilePicture: String!
+  }
+
   type Query {
     currentUser: User!
   }
 
   type Mutation {
-    signup(
-      username: String!
-      email: String!
-      name: String!
-      password: String!
-      profilePicture: String!
-    ): User!
-
+    signup(input: SignUpInput): User!
     login(usernameOrEmail: String!, password: String!): AuthResponse!
   }
 `;
