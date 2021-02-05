@@ -15,10 +15,10 @@ const typeDefs = gql`
   }
 
   input SignUpInput {
-    username: String! @constraint(minLength: 5, maxLength: 64)
-    email: String! @constraint(minLength: 5, format: "email")
-    name: String! @constraint(minLength: 3, maxLength: 255)
-    password: String! @constraint(minLength: 5)
+    username: String!
+    email: String!
+    name: String!
+    password: String!
     profilePicture: String!
   }
 

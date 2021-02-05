@@ -1,4 +1,9 @@
-import React, { useReducer, useCallback, SyntheticEvent } from 'react';
+import React, {
+  useReducer,
+  useCallback,
+  SyntheticEvent,
+  useContext,
+} from 'react';
 import { useMutation } from '@apollo/client';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
@@ -9,6 +14,7 @@ import { LoginActionTypes } from './LoginForm';
 import { SizeType } from './inputs/TextInput';
 import { SIGN_UP } from '../../apollo/mutations';
 import { toBase64 } from '../../util';
+import { ErrorContext } from '../../contexts';
 
 type LoginFormState = {
   username: string;
@@ -83,7 +89,11 @@ export const SignUpForm: React.FC<unknown> = () => {
     { username, email, name, password, profilePicture },
     dispatch,
   ] = useReducer(signupReducer, initialState);
-  const [signUp, { data }] = useMutation(SIGN_UP);
+  const [
+    signUp,
+    { data, loading: mutationLoading, error: mutationError },
+  ] = useMutation(SIGN_UP);
+  const { setErrors } = useContext(ErrorContext);
 
   const onTextChange = useCallback(
     (
@@ -113,8 +123,14 @@ export const SignUpForm: React.FC<unknown> = () => {
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const base64 = await toBase64(profilePicture);
-    console.log(base64);
+    let base64;
+    try {
+      base64 = await toBase64(profilePicture);
+    } catch (e) {
+      let message = e.message;
+      setErrors([{ Picture: message }]);
+      return;
+    }
     const res = signUp({
       variables: {
         input: {
