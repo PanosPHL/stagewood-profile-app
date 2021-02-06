@@ -19,11 +19,11 @@
 
   - Run **npm run start:dev**
 
-  _If there are any issues sending requests to the back end, try adjusting the **proxy** field in the package.json_
-
 - In client/:
 
   - Run **npm start**
+  
+  _If there are any issues sending requests to the back end, try adjusting the **proxy** field in the package.json_
 
 ## Technologies:
 
