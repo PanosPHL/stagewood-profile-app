@@ -14,13 +14,13 @@ import './index.css';
 const Home = lazy(() => import('./components/pages/Home'));
 const Auth = lazy(() => import('./components/pages/Auth'));
 
-export type User = {
+export interface User {
   id: number;
   username: string;
   email: string;
   name: string;
   profilePicture: string;
-};
+}
 
 const initialUser: User = {
   id: 0,
@@ -73,7 +73,11 @@ function App() {
                     <Auth pageType={AuthPageType.SignUp} setUser={setUser} />
                   )}
                 />
-                <AuthRoute path="/" component={Home} userId={user.id} />
+                <AuthRoute
+                  path="/"
+                  render={() => <Home user={user} />}
+                  userId={user.id}
+                />
               </Switch>
             </Suspense>
           </Router>

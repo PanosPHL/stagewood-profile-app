@@ -10,6 +10,7 @@ import { User } from '../../App';
 import logo from '../../assets/stagewood_consortium_logo.png';
 import logoText from '../../assets/stagewood_consortium_text.png';
 import background from '../../assets/bg-pattern-tile.svg';
+import PatternBackground, { PageType } from '../universal/PatternBackground';
 
 export enum AuthPageType {
   Login = 'login',
@@ -25,18 +26,6 @@ interface AuthProps extends AuthFormProps {
 }
 
 const useStyles = makeStyles((theme) => ({
-  background: {
-    backgroundImage: `url(${background})`,
-    backgroundPositionX: '200px',
-    backgroundSize: '1000px',
-  },
-  container: {
-    position: 'relative',
-    width: '100vw',
-    height: '100vh',
-    overflow: 'hidden',
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-  },
   formCard: {
     position: 'absolute',
     left: '50%',
@@ -90,8 +79,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Auth: React.FC<AuthProps> = ({ pageType, setUser }) => {
   const {
-    background,
-    container,
     formCard,
     logoStyle,
     logoTextStyle,
@@ -104,56 +91,54 @@ const Auth: React.FC<AuthProps> = ({ pageType, setUser }) => {
   } = useStyles();
 
   return (
-    <div className={background}>
-      <section className={container}>
-        <Paper variant="outlined" elevation={3} className={formCard}>
-          <div className={`${flexColumn} ${cardHeader}`}>
-            <img className={logoStyle} src={logo} alt="Stagewood Consortium" />
-            <img
-              className={logoTextStyle}
-              src={logoText}
-              alt="StageWood Consortium Inc."
-            />
-            <Typography
-              className={subheaderText}
-              align="center"
-              variant="subtitle1"
-            >
-              Dream. Express. Produce.
-            </Typography>
-          </div>
-          <div className={`${flexColumn} ${cardContent}`}>
-            <DemoUserButton />
-            <AuthHorizontalRule />
-            {pageType === AuthPageType.SignUp ? (
-              <>
-                <SignUpForm setUser={setUser} />
-                <div className={`${flexColumn} ${cardFooter}`}>
-                  <Typography className={subheaderText} variant="body2">
-                    Have an account?
-                  </Typography>
-                  <Link className={link} to="/login">
-                    <Typography variant="body2">Sign In</Typography>
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <>
-                <LoginForm setUser={setUser} />
-                <div className={`${flexColumn} ${cardFooter}`}>
-                  <Typography className={subheaderText} variant="body2">
-                    Need an account?
-                  </Typography>
-                  <Link className={link} to="/signup">
-                    <Typography variant="body2">Sign Up</Typography>
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </Paper>
-      </section>
-    </div>
+    <PatternBackground pageType={PageType.Auth}>
+      <Paper variant="outlined" elevation={3} className={formCard}>
+        <div className={`${flexColumn} ${cardHeader}`}>
+          <img className={logoStyle} src={logo} alt="Stagewood Consortium" />
+          <img
+            className={logoTextStyle}
+            src={logoText}
+            alt="StageWood Consortium Inc."
+          />
+          <Typography
+            className={subheaderText}
+            align="center"
+            variant="subtitle1"
+          >
+            Dream. Express. Produce.
+          </Typography>
+        </div>
+        <div className={`${flexColumn} ${cardContent}`}>
+          <DemoUserButton />
+          <AuthHorizontalRule />
+          {pageType === AuthPageType.SignUp ? (
+            <>
+              <SignUpForm setUser={setUser} />
+              <div className={`${flexColumn} ${cardFooter}`}>
+                <Typography className={subheaderText} variant="body2">
+                  Have an account?
+                </Typography>
+                <Link className={link} to="/login">
+                  <Typography variant="body2">Sign In</Typography>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <LoginForm setUser={setUser} />
+              <div className={`${flexColumn} ${cardFooter}`}>
+                <Typography className={subheaderText} variant="body2">
+                  Need an account?
+                </Typography>
+                <Link className={link} to="/signup">
+                  <Typography variant="body2">Sign Up</Typography>
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      </Paper>
+    </PatternBackground>
   );
 };
 
