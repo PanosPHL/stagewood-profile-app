@@ -13,7 +13,6 @@ AWS.config.update({
 const s3Bucket = new AWS.S3({ params: { Bucket: bucketName } });
 
 module.exports = function uploadProfilePicture(b64Image) {
-  console.log(bucketName);
   const buff = Buffer.from(
     b64Image.replace(/^data:image\/\w+;base64,/, ''),
     'base64'
@@ -32,8 +31,6 @@ module.exports = function uploadProfilePicture(b64Image) {
   s3Bucket.putObject(data, function (err, data) {
     if (err) {
       console.log(err);
-    } else {
-      console.log('success');
     }
   });
 

@@ -2,10 +2,24 @@ const express = require('express');
 const { makeExecutableSchema } = require('graphql-tools');
 const { ApolloServer, ValidationError } = require('apollo-server-express');
 const { PrismaClient } = require('@prisma/client');
+const jwt = require('jsonwebtoken');
 const { typeDefs } = require('./schema');
 const { resolvers } = require('./resolvers');
+const {
+  jwtConfig: { secret },
+} = require('./config');
 
 const prisma = new PrismaClient();
+
+const getUser = (token) => {
+  try {
+    if (token) {
+      return jwt.verify(token, secret);
+    }
+  } catch (e) {
+    return null;
+  }
+};
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -14,8 +28,14 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
-  context: {
-    prisma,
+  context: ({ req }) => {
+    const tokenWithBearer = req.headers.authorization || '';
+    const token = tokenWithBearer.split(' ')[1];
+    const user = getUser(token);
+    return {
+      user,
+      prisma,
+    };
   },
 });
 

@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from 'react';
 import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { TextInput } from './inputs';
@@ -15,6 +16,7 @@ import { Action } from './types';
 import { SizeType } from './inputs/TextInput';
 import { LOGIN } from '../../apollo/mutations';
 import { ErrorContext } from '../../contexts';
+import { AuthFormProps } from '../pages/Auth';
 
 type LoginFormState = {
   usernameOrEmail: string;
@@ -59,7 +61,7 @@ const useStyles = makeStyles({
   },
 });
 
-const LoginForm: React.FC<unknown> = () => {
+const LoginForm: React.FC<AuthFormProps> = ({ setUser }) => {
   const [{ usernameOrEmail, password }, dispatch] = useReducer(
     loginReducer,
     initialState
@@ -72,6 +74,7 @@ const LoginForm: React.FC<unknown> = () => {
     },
   });
   const { setErrors } = useContext(ErrorContext);
+  const history = useHistory();
 
   const onTextChange = useCallback(
     (
@@ -94,8 +97,14 @@ const LoginForm: React.FC<unknown> = () => {
         password,
       },
     });
-
     console.log(res);
+
+    if (res.data) {
+      localStorage.setItem('token', res.data.login.token);
+      const { __typename, ...user } = res.data.login.user;
+      setUser(user);
+      history.push('/');
+    }
   };
 
   const { form, button } = useStyles();
@@ -106,7 +115,7 @@ const LoginForm: React.FC<unknown> = () => {
         state={usernameOrEmail}
         onChange={onTextChange}
         actionType={LoginActionTypes.SET_USERNAME_OR_EMAIL}
-        type={TextInputType.Username}
+        type={TextInputType.UsernameOREmail}
         size={SizeType.Medium}
       />
       <TextInput

@@ -5,6 +5,7 @@ import React, {
   useContext,
 } from 'react';
 import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { TextInput, FileInput } from './inputs';
@@ -15,6 +16,7 @@ import { SizeType } from './inputs/TextInput';
 import { SIGN_UP } from '../../apollo/mutations';
 import { toBase64 } from '../../util';
 import { ErrorContext } from '../../contexts';
+import { AuthFormProps } from '../pages/Auth';
 
 type LoginFormState = {
   username: string;
@@ -84,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const SignUpForm: React.FC<unknown> = () => {
+export const SignUpForm: React.FC<AuthFormProps> = ({ setUser }) => {
   const [
     { username, email, name, password, profilePicture },
     dispatch,
@@ -104,6 +106,7 @@ export const SignUpForm: React.FC<unknown> = () => {
     },
   });
   const { setErrors } = useContext(ErrorContext);
+  const history = useHistory();
 
   const onTextChange = useCallback(
     (
@@ -124,8 +127,6 @@ export const SignUpForm: React.FC<unknown> = () => {
       type: SignUpActionTypes | LoginActionTypes
     ) => {
       const file = e.currentTarget.files ? e.currentTarget.files[0] : undefined;
-      console.log('hit');
-      console.log(file);
       dispatch({ type, file, payload: '' });
     },
     []
@@ -142,7 +143,7 @@ export const SignUpForm: React.FC<unknown> = () => {
       return;
     }
     try {
-      const res = signUp({
+      const res = await signUp({
         variables: {
           input: {
             username,
@@ -153,6 +154,13 @@ export const SignUpForm: React.FC<unknown> = () => {
           },
         },
       });
+
+      if (res.data) {
+        localStorage.setItem('token', res.data.signup.token);
+        const { __typename, ...user } = res.data.signup.user;
+        setUser(user);
+        history.push('/');
+      }
     } catch (e) {
       console.log(e);
     }

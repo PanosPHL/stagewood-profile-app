@@ -9,6 +9,7 @@ export enum TextInputType {
   Email = 'email',
   Name = 'name',
   Password = 'password',
+  UsernameOREmail = 'usernameOrEmail',
 }
 
 interface TextInputProps {
@@ -28,6 +29,9 @@ export enum SizeType {
 }
 
 const getLabel = (type: string) => {
+  if (type === TextInputType.UsernameOREmail) {
+    return 'Username or Email';
+  }
   return type[0].toUpperCase() + type.slice(1);
 };
 

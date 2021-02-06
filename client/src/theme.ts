@@ -1,6 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
+  typography: {
+    fontFamily: ['Raleway', 'Helvetica', 'Lato', 'Arial', 'Roboto'].join(','),
+  },
   palette: {
     primary: {
       main: 'rgba(0, 0, 0, 0.65)',

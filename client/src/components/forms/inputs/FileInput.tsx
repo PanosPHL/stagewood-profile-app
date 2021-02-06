@@ -26,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
   fileText: {
     marginLeft: '14px',
   },
+  button: {
+    width: '80%',
+    minWidth: '240px',
+  },
 }));
 
 const FileInput: React.FC<FileInputProps> = ({
@@ -34,7 +38,7 @@ const FileInput: React.FC<FileInputProps> = ({
   actionType,
 }) => {
   const fileInput = useRef<HTMLInputElement | null>(null);
-  const { inputContainer, fileText } = useStyles();
+  const { inputContainer, fileText, button } = useStyles();
   return (
     <div className={inputContainer}>
       <input
@@ -48,6 +52,7 @@ const FileInput: React.FC<FileInputProps> = ({
       />
       <Button
         variant="contained"
+        className={button}
         onClick={() => {
           if (fileInput.current) {
             fileInput.current.click();

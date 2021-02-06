@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { SignUpForm, LoginForm } from '../forms';
 import { DemoUserButton } from '../buttons';
 import { AuthHorizontalRule } from '../misc';
+import { User } from '../../App';
 import logo from '../../assets/stagewood_consortium_logo.png';
 import logoText from '../../assets/stagewood_consortium_text.png';
 import background from '../../assets/bg-pattern-tile.svg';
@@ -15,7 +16,11 @@ export enum AuthPageType {
   SignUp = 'signup',
 }
 
-interface AuthProps {
+export interface AuthFormProps {
+  setUser: Dispatch<SetStateAction<User>>;
+}
+
+interface AuthProps extends AuthFormProps {
   pageType: AuthPageType;
 }
 
@@ -72,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
   subheaderText: {
     color: '#555555',
-    fontWeight: 'lighter',
+    fontWeight: 'normal',
   },
   link: {
     color: theme.palette.secondary.main,
@@ -83,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Auth: React.FC<AuthProps> = ({ pageType }) => {
+const Auth: React.FC<AuthProps> = ({ pageType, setUser }) => {
   const {
     background,
     container,
@@ -122,7 +127,7 @@ const Auth: React.FC<AuthProps> = ({ pageType }) => {
             <AuthHorizontalRule />
             {pageType === AuthPageType.SignUp ? (
               <>
-                <SignUpForm />
+                <SignUpForm setUser={setUser} />
                 <div className={`${flexColumn} ${cardFooter}`}>
                   <Typography className={subheaderText} variant="body2">
                     Have an account?
@@ -134,7 +139,7 @@ const Auth: React.FC<AuthProps> = ({ pageType }) => {
               </>
             ) : (
               <>
-                <LoginForm />
+                <LoginForm setUser={setUser} />
                 <div className={`${flexColumn} ${cardFooter}`}>
                   <Typography className={subheaderText} variant="body2">
                     Need an account?

@@ -18,6 +18,7 @@ const resolvers = {
       ctx,
       info
     ) => {
+      console.log('hit');
       const validationErrors = validateSignUp(username, email, name, password);
 
       if (validationErrors.length) {
@@ -29,10 +30,35 @@ const resolvers = {
         );
       }
 
+      let user = await ctx.prisma.user.findFirst({
+        where: {
+          OR: [
+            {
+              username: {
+                equals: username,
+              },
+            },
+            {
+              email: {
+                equals: email,
+              },
+            },
+          ],
+        },
+      });
+
+      if (user) {
+        throw new UserInputError('Failed to sign up due to validation errors', {
+          validationErrors: [
+            'A user already exists with this username or email',
+          ],
+        });
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const url = uploadProfilePicture(profilePicture);
 
-      const user = await ctx.prisma.user.create({
+      user = await ctx.prisma.user.create({
         data: {
           username,
           email,
@@ -42,7 +68,15 @@ const resolvers = {
         },
       });
 
-      return user;
+      const token = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+        },
+        secret
+      );
+
+      return { user, token };
     },
     login: async (parent, { usernameOrEmail, password }, ctx, info) => {
       const user = await ctx.prisma.user.findFirst({
