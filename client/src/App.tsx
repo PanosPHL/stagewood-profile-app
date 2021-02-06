@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useCallback } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import client from './apollo';
 import { ThemeProvider } from '@material-ui/core';
@@ -35,6 +35,11 @@ function App() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User>(initialUser);
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('token');
+    setUser(initialUser);
+  }, []);
+
   const value: ErrorContextState = {
     errors,
     setErrors,
@@ -46,10 +51,16 @@ function App() {
     }
   }, [errors.length]);
 
+  useEffect(() => {
+    return () => {
+      localStorage.clear();
+    };
+  }, []);
+
   return (
-    <ErrorContext.Provider value={value}>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <ErrorContext.Provider value={value}>
           <ErrorModal
             open={open}
             setOpen={setOpen}
@@ -75,15 +86,17 @@ function App() {
                 />
                 <AuthRoute
                   path="/"
-                  render={() => <Home user={user} />}
+                  render={() => (
+                    <Home user={user} handleLogout={handleLogout} />
+                  )}
                   userId={user.id}
                 />
               </Switch>
             </Suspense>
           </Router>
-        </ThemeProvider>
-      </ApolloProvider>
-    </ErrorContext.Provider>
+        </ErrorContext.Provider>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 

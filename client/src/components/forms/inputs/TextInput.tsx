@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import { SignUpActionTypes } from '../SignUpForm';
 import { LoginActionTypes } from '../LoginForm';
@@ -63,12 +62,6 @@ const TextInput: React.FC<TextInputProps> = ({
       size={size}
     />
   );
-};
-
-TextInput.propTypes = {
-  state: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(Object.values(TextInputType)).isRequired,
 };
 
 export default TextInput;

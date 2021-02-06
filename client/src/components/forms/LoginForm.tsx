@@ -97,9 +97,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ setUser }) => {
         password,
       },
     });
-    console.log(res);
 
-    if (res.data) {
+    if (res && res.data) {
       localStorage.setItem('token', res.data.login.token);
       const { __typename, ...user } = res.data.login.user;
       setUser(user);

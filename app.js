@@ -3,6 +3,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const { ApolloServer, ValidationError } = require('apollo-server-express');
 const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const { typeDefs } = require('./schema');
 const { resolvers } = require('./resolvers');
 const {
@@ -40,6 +41,10 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 server.applyMiddleware({ app });
 
 app.listen({ port: 4000 }, () => console.log(`Listening on port 4000...`));

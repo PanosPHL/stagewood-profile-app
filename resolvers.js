@@ -8,6 +8,7 @@ const { validateSignUp } = require('./validators');
 const {
   UserInputError,
   AuthenticationError,
+  ApolloError,
 } = require('apollo-server-express');
 
 const resolvers = {
@@ -18,7 +19,6 @@ const resolvers = {
       ctx,
       info
     ) => {
-      console.log('hit');
       const validationErrors = validateSignUp(username, email, name, password);
 
       if (validationErrors.length) {
@@ -73,7 +73,10 @@ const resolvers = {
           id: user.id,
           username: user.username,
         },
-        secret
+        secret,
+        {
+          expiresIn: '1d',
+        }
       );
 
       return { user, token };
@@ -111,12 +114,26 @@ const resolvers = {
           id: user.id,
           username: user.username,
         },
-        secret
+        secret,
+        {
+          expiresIn: '1d',
+        }
       );
 
       return {
         user,
         token,
+      };
+    },
+    logout: (parent, { userId }, ctx, info) => {
+      if (ctx.user.id !== userId) {
+        throw new ApolloError(
+          'You are not the user authorized to perform this action'
+        );
+      }
+
+      return {
+        id: userId,
       };
     },
   },

@@ -9,6 +9,7 @@ import partyBG from '../../assets/party-bg.jpg';
 
 interface HomeProps {
   user: User;
+  handleLogout: () => void;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
     height: '50%',
     [theme.breakpoints.between('sm', 'md')]: {
       margin: theme.spacing(8, 0, 0),
+      height: '56%',
     },
   },
   textContainer: {
@@ -96,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home: React.FC<HomeProps> = ({
   user: { id, username, email, name, profilePicture },
+  handleLogout,
 }) => {
   const {
     main,
@@ -110,7 +113,7 @@ const Home: React.FC<HomeProps> = ({
   } = useStyles();
   return (
     <div>
-      <Navbar />
+      <Navbar handleLogout={handleLogout} />
       <PatternBackground pageType={PageType.Home}>
         <main className={main}>
           <Paper elevation={4} className={profile}>

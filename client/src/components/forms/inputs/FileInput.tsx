@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '14px',
   },
   button: {
-    width: '80%',
+    width: '72%',
     minWidth: '240px',
   },
 }));
@@ -43,7 +43,7 @@ const FileInput: React.FC<FileInputProps> = ({
     <div className={inputContainer}>
       <input
         type="file"
-        accept="image/*"
+        accept="image/jpeg"
         style={{ display: 'none' }}
         ref={fileInput}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

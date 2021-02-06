@@ -91,10 +91,7 @@ export const SignUpForm: React.FC<AuthFormProps> = ({ setUser }) => {
     { username, email, name, password, profilePicture },
     dispatch,
   ] = useReducer(signupReducer, initialState);
-  const [
-    signUp,
-    { data, loading: mutationLoading, error: mutationError },
-  ] = useMutation(SIGN_UP, {
+  const [signUp, { data }] = useMutation(SIGN_UP, {
     onError: (e) => {
       if (e.graphQLErrors.length) {
         const valErrors = e.graphQLErrors[0];

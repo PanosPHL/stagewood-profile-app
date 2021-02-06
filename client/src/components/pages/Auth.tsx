@@ -9,7 +9,6 @@ import { AuthHorizontalRule } from '../misc';
 import { User } from '../../App';
 import logo from '../../assets/stagewood_consortium_logo.png';
 import logoText from '../../assets/stagewood_consortium_text.png';
-import background from '../../assets/bg-pattern-tile.svg';
 import PatternBackground, { PageType } from '../universal/PatternBackground';
 
 export enum AuthPageType {
@@ -109,7 +108,7 @@ const Auth: React.FC<AuthProps> = ({ pageType, setUser }) => {
           </Typography>
         </div>
         <div className={`${flexColumn} ${cardContent}`}>
-          <DemoUserButton />
+          <DemoUserButton setUser={setUser} />
           <AuthHorizontalRule />
           {pageType === AuthPageType.SignUp ? (
             <>

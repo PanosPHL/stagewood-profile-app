@@ -14,6 +14,10 @@ const typeDefs = gql`
     token: String!
   }
 
+  type LogoutResponse {
+    id: Int!
+  }
+
   input SignUpInput {
     username: String!
     email: String!
@@ -29,6 +33,7 @@ const typeDefs = gql`
   type Mutation {
     signup(input: SignUpInput!): AuthResponse!
     login(usernameOrEmail: String!, password: String!): AuthResponse!
+    logout(userId: Int!): LogoutResponse!
   }
 `;
 
