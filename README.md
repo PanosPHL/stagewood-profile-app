@@ -28,7 +28,7 @@
 ## Technologies:
 
 - Front End: React, React Router, TypeScript, and Material UI
-- Back End: Node.js, Apollo Server, Express, Prisma, with JWT Authentication
+- Back End: Node.js, Apollo Server, Express, Prisma, JWT Authentication, and an AWS S3 bucket
 
 ## Thank You:
 
