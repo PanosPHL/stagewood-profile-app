@@ -1,16 +1,15 @@
 const AWS = require('aws-sdk');
 const { randomBytes } = require('crypto');
-const {
-  awsConfig: { region, accessKey, secretKey, bucketName },
-} = require('./config');
 
 AWS.config.update({
-  region,
-  accessKeyId: accessKey,
-  secretAccessKey: secretKey,
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
 });
 
-const s3Bucket = new AWS.S3({ params: { Bucket: bucketName } });
+const s3Bucket = new AWS.S3({
+  params: { Bucket: process.env.AWS_BUCKET_NAME },
+});
 
 module.exports = function uploadProfilePicture(b64Image) {
   const buff = Buffer.from(

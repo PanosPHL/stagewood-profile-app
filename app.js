@@ -6,16 +6,13 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const { typeDefs } = require('./schema');
 const { resolvers } = require('./resolvers');
-const {
-  jwtConfig: { secret },
-} = require('./config');
 
 const prisma = new PrismaClient();
 
 const getUser = (token) => {
   try {
     if (token) {
-      return jwt.verify(token, secret);
+      return jwt.verify(token, process.env.JWT_SECRET_KEY);
     }
   } catch (e) {
     return null;
@@ -47,4 +44,6 @@ app.get('/*', (req, res) => {
 });
 server.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () => console.log(`Listening on port 4000...`));
+const port = process.env.PORT || 4000;
+
+app.listen(port, () => console.log(`Listening on port ${port}...`));

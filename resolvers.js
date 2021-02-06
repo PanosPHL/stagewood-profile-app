@@ -1,8 +1,5 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {
-  jwtConfig: { secret },
-} = require('./config');
 const uploadProfilePicture = require('./aws');
 const { validateSignUp } = require('./validators');
 const {
@@ -73,7 +70,7 @@ const resolvers = {
           id: user.id,
           username: user.username,
         },
-        secret,
+        process.env.JWT_SECRET_KEY,
         {
           expiresIn: '1d',
         }
@@ -114,7 +111,7 @@ const resolvers = {
           id: user.id,
           username: user.username,
         },
-        secret,
+        process.env.JWT_SECRET_KEY,
         {
           expiresIn: '1d',
         }
